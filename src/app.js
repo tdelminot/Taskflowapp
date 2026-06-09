@@ -5,6 +5,11 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
+// Import routes
+const authRoutes = require('./routes/auth.routes');
+const projectRoutes = require('./routes/project.routes');
+const taskRoutes = require('./routes/task.routes');
+const commentRoutes = require('./routes/comment.routes');
 
 dotenv.config();
 
@@ -37,7 +42,12 @@ app.use(morgan('combined'));
 // Static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Routes (to be added)
+ 
+// Use routes
+app.use('/api/auth', authRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api', taskRoutes);
+app.use('/api', commentRoutes);
 app.get('/api/health', (req, res) => {
     res.json({ status: 'OK', message: 'TaskFlow API is running' });
 });

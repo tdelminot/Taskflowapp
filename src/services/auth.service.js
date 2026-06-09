@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const userRepository = require('../repositories/user.repository');
 const { v4: uuidv4 } = require('uuid');
+const { Op } = require('sequelize');
 
 class AuthService {
     // Generate JWT token

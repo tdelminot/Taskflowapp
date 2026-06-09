@@ -1,5 +1,6 @@
 const BaseRepository = require('./base.repository');
 const { User } = require('../models');
+const { Op } = require('sequelize');
 
 class UserRepository extends BaseRepository {
     constructor() {

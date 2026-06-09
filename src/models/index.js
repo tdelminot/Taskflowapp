@@ -1,52 +1,53 @@
-const { Sequelize } = require('sequelize');
-const dotenv = require('dotenv');
+require('dotenv').config();
 
-dotenv.config();
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
+const process = require('process');
+const basename = path.basename(__filename);
+const db = {};
 
+// Utiliser les variables d'environnement au lieu de config.json
 const sequelize = new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
-    {
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT || 3306,
-        dialect: 'mysql',
-        logging: process.env.NODE_ENV === 'development' ? console.log : false,
-        pool: {
-            max: 10,
-            min: 0,
-            acquire: 30000,
-            idle: 10000
-        }
-    }
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT || 3306,
+    dialect: 'mysql',
+    logging: false
+  }
 );
 
-// Import models
-const User = require('./User')(sequelize);
-const Project = require('./Project')(sequelize);
-const Task = require('./Task')(sequelize);
-const Comment = require('./Comment')(sequelize);
+// Tester la connexion
+sequelize.authenticate()
+  .then(() => console.log('✅ MySQL connected successfully'))
+  .catch(err => console.error('❌ MySQL connection error:', err.message));
 
-// Define associations
-User.hasMany(Project, { foreignKey: 'owner_id', as: 'projects' });
-Project.belongsTo(User, { foreignKey: 'owner_id', as: 'owner' });
+// Lire tous les fichiers du dossier models
+fs.readdirSync(__dirname)
+  .filter(file => {
+    return (
+      file.indexOf('.') !== 0 &&
+      file !== basename &&
+      file.slice(-3) === '.js' &&
+      file.indexOf('.test.js') === -1
+    );
+  })
+  .forEach(file => {
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    db[model.name] = model;
+  });
 
-User.hasMany(Task, { foreignKey: 'assigned_to', as: 'assigned_tasks' });
-User.hasMany(Task, { foreignKey: 'created_by', as: 'created_tasks' });
-Task.belongsTo(User, { foreignKey: 'assigned_to', as: 'assignee' });
-Task.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+// Appliquer les associations si elles existent
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
 
-Project.hasMany(Task, { foreignKey: 'project_id', as: 'tasks' });
-Task.belongsTo(Project, { foreignKey: 'project_id', as: 'project' });
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
-Task.hasMany(Comment, { foreignKey: 'task_id', as: 'comments' });
-Comment.belongsTo(Task, { foreignKey: 'task_id', as: 'task' });
-Comment.belongsTo(User, { foreignKey: 'user_id', as: 'author' });
-
-module.exports = {
-    sequelize,
-    User,
-    Project,
-    Task,
-    Comment
-};
+module.exports = db;

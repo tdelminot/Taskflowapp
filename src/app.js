@@ -10,6 +10,8 @@ const authRoutes = require('./routes/auth.routes');
 const projectRoutes = require('./routes/project.routes');
 const taskRoutes = require('./routes/task.routes');
 const commentRoutes = require('./routes/comment.routes');
+const uploadRoutes = require('./routes/upload.routes');
+
 
 dotenv.config();
 
@@ -48,6 +50,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api', taskRoutes);
 app.use('/api', commentRoutes);
+app.use('/api', uploadRoutes);
+
 app.get('/api/health', (req, res) => {
     res.json({ status: 'OK', message: 'TaskFlow API is running' });
 });
@@ -73,7 +77,7 @@ async function startServer() {
         
         // Sync database (development only)
         if (process.env.NODE_ENV === 'development') {
-            await sequelize.sync({ alter: true });
+            await sequelize.sync({ force: true });
             console.log('✅ Database synced');
         }
         

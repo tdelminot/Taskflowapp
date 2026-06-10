@@ -3,7 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
-const rateLimit = require('express-rate-limit');
+const { globalLimiter, authLimiter, apiLimiter } = require('./middlewares/rateLimit.middleware');
 const path = require('path');
 // Import routes
 const authRoutes = require('./routes/auth.routes');
@@ -27,12 +27,13 @@ app.use(cors({
 }));
 
 // Rate limiting
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
-    message: 'Too many requests from this IP, please try again later.'
-});
-app.use('/api/', limiter);
+// Global rate limit on all API endpoints
+app.use('/api/', globalLimiter.middleware());
+
+// Stricter rate limit for auth endpoints
+app.use('/api/auth/', authLimiter.middleware());
+
+
 
 // Body parsing
 app.use(express.json());

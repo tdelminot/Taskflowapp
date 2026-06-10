@@ -3,5 +3,9 @@ node_modules/
 uploads/
 coverage/
 dist/
+# Logs
+logs/
 *.log
 .DS_Store
+# Redis dump
+dump.rdb

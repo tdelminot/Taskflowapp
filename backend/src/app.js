@@ -12,7 +12,6 @@ const taskRoutes = require('./routes/task.routes');
 const commentRoutes = require('./routes/comment.routes');
 const uploadRoutes = require('./routes/upload.routes');
 
-
 dotenv.config();
 
 const { sequelize } = require('./models');
@@ -26,14 +25,15 @@ app.use(cors({
     credentials: true
 }));
 
-// Rate limiting
-// Global rate limit on all API endpoints
-app.use('/api/', globalLimiter.middleware());
+// Rate limiting - désactivé en test
+const isTestEnvironment = process.env.NODE_ENV === 'test';
 
-// Stricter rate limit for auth endpoints
-app.use('/api/auth/', authLimiter.middleware());
-
-
+if (!isTestEnvironment) {
+    // Global rate limit on all API endpoints
+    app.use('/api/', globalLimiter.middleware());
+    // Stricter rate limit for auth endpoints
+    app.use('/api/auth/', authLimiter.middleware());
+}
 
 // Body parsing
 app.use(express.json());
@@ -45,7 +45,6 @@ app.use(morgan('combined'));
 // Static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
- 
 // Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
@@ -69,35 +68,35 @@ app.use((req, res) => {
 });
 
 // Database connection and server start
-const PORT = process.env.PORT || 5000;
-
 async function startServer() {
     try {
         await sequelize.authenticate();
         console.log('✅ MySQL connected successfully');
         
-        // Sync database (development only)
+        // Sync database seulement en développement (pas en test)
         if (process.env.NODE_ENV === 'development') {
-            await sequelize.sync({ force: true });
+            await sequelize.sync({ alter: true });
             console.log('✅ Database synced');
         }
         
-       /* app.listen(PORT, () => {
-            console.log(`🚀 Server running on port ${PORT}`);
-        }); */
-if (require.main === module) {
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => {
-        console.log(`🚀 Server running on port ${PORT}`);
-    });
-}
-
+        // Démarrer le serveur seulement si le fichier est exécuté directement
+        if (require.main === module) {
+            const PORT = process.env.PORT || 5000;
+            app.listen(PORT, () => {
+                console.log(`🚀 Server running on port ${PORT}`);
+            });
+        }
     } catch (error) {
         console.error('❌ Unable to connect to database:', error);
-        process.exit(1);
+        if (process.env.NODE_ENV !== 'test') {
+            process.exit(1);
+        }
     }
 }
 
-startServer();
+// Ne pas démarrer le serveur automatiquement en test
+if (process.env.NODE_ENV !== 'test') {
+    startServer();
+}
 
 module.exports = app;

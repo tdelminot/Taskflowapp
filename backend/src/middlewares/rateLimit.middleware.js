@@ -86,6 +86,12 @@ class RateLimiter {
     // Express middleware
     middleware() {
         return async (req, res, next) => {
+               // desactive during test
+        if (process.env.NODE_ENV === 'test') {
+            return next();
+        }
+
+
             const result = await this.checkLimit(req);
             
             // Add rate limit headers

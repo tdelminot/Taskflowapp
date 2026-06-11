@@ -62,5 +62,16 @@ module.exports = (sequelize) => {
         underscored: true
     });
 
+
+ Task.associate = (models) => {
+        Task.belongsTo(models.Project, { as: 'project', foreignKey: 'project_id' });
+        Task.hasMany(models.Comment, { as: 'comments', foreignKey: 'task_id' });
+        Task.belongsTo(models.User, { as: 'assignee', foreignKey: 'assigned_to' });
+        Task.belongsTo(models.User, { as: 'creator', foreignKey: 'created_by' });
+    };
+
+
+
+
     return Task;
 };

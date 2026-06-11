@@ -27,5 +27,18 @@ module.exports = (sequelize) => {
         underscored: true
     });
 
+
+
+
+ Comment.associate = (models) => {
+        Comment.belongsTo(models.Task, { as: 'task', foreignKey: 'task_id' });
+        Comment.belongsTo(models.User, { as: 'author', foreignKey: 'user_id' });
+    };
+
+
+
+
+
+
     return Comment;
 };

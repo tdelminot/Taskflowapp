@@ -1,0 +1,53 @@
+{
+  "name": "taskflow",
+  "version": "1.0.0",
+  "description": "TaskFlow API - Project management backend with MySQL",
+  "main": "backend/src/app.js",
+  "scripts": {
+    "start": "node backend/src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/",
+    "format": "prettier --write src/"
+  },
+  "keywords": [
+    "api",
+    "task",
+    "management",
+    "mysql"
+  ],
+  "author": "Tafara Delminot",
+  "license": "MIT",
+  "dependencies": {
+    "@types/redis": "^4.0.10",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "express-validator": "^7.3.2",
+    "fs-extra": "^11.3.5",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.3",
+    "morgan": "^1.11.0",
+    "multer": "^2.1.1",
+    "mysql2": "^3.22.5",
+    "redis": "^6.0.0",
+    "sequelize": "^6.37.8",
+    "sharp": "^0.34.5",
+    "uuid": "^8.3.2",
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "babel-jest": "^30.4.1",
+    "eslint": "^10.4.1",
+    "jest": "^30.4.2",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.8.4",
+    "supertest": "^7.2.2"
+  }
+}

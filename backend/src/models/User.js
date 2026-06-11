@@ -54,6 +54,22 @@ module.exports = (sequelize) => {
         underscored: true
     });
 
+
+
+
+ User.associate = (models) => {
+        User.hasMany(models.Project, { as: 'projects', foreignKey: 'owner_id' });
+        User.hasMany(models.Task, { as: 'assigned_tasks', foreignKey: 'assigned_to' });
+        User.hasMany(models.Task, { as: 'created_tasks', foreignKey: 'created_by' });
+        User.hasMany(models.Comment, { as: 'comments', foreignKey: 'user_id' });
+    };
+
+
+
+
+
+
+
     // Hash password before saving
     User.beforeCreate(async (user) => {
         if (user.password_hash) {

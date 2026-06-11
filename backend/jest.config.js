@@ -1,8 +1,15 @@
 module.exports = {
-  testEnvironment: 'node',
-  transform: {
-    '^.+\\.js$': 'babel-jest',
-  },
-  transformIgnorePatterns: [],
-  verbose: true
+    testEnvironment: 'node',
+    coverageDirectory: 'coverage',
+    collectCoverageFrom: [
+        'src/**/*.js',
+        '!src/app.js',
+        '!src/server.js',
+        '!src/models/index.js'
+    ],
+    testMatch: ['**/tests/**/*.test.js'],
+    setupFilesAfterEnv: ['./tests/setup.js'],
+    testTimeout: 30000,
+    forceExit: true,
+    verbose: true
 };

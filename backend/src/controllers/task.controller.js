@@ -24,6 +24,7 @@ class TaskController {
     async update(req, res, next) {
         try {
             const { id } = req.params;
+            // L'ordre : (taskId, userId, updateData)
             const task = await taskService.updateTask(id, req.userId, req.body);
             res.json(task);
         } catch (error) {

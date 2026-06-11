@@ -1,5 +1,5 @@
 const BaseRepository = require('./base.repository');
-const { Task, Comment, User } = require('../models');
+const { Task, Comment, User, Project } = require('../models');
 const { Op } = require('sequelize');
 
 class TaskRepository extends BaseRepository {
@@ -23,16 +23,16 @@ class TaskRepository extends BaseRepository {
         });
     }
 
-    // Find task with comments
+    // Find task with comments - VERSION CORRIGÉE
     async findTaskWithComments(taskId) {
         return await this.findById(taskId, {
             include: [
                 {
-                    association: 'comments',
+                    model: Comment,
                     as: 'comments',
                     include: [
                         {
-                            association: 'author',
+                            model: User,
                             as: 'author',
                             attributes: ['id', 'username', 'avatar_url']
                         }
@@ -40,19 +40,19 @@ class TaskRepository extends BaseRepository {
                     order: [['createdAt', 'ASC']]
                 },
                 {
-                    association: 'assignee',
+                    model: User,
                     as: 'assignee',
                     attributes: ['id', 'username', 'email']
                 },
                 {
-                    association: 'creator',
+                    model: User,
                     as: 'creator',
                     attributes: ['id', 'username', 'email']
                 },
                 {
-                    association: 'project',
+                    model: Project,  // ← Utiliser Project, pas Task !
                     as: 'project',
-                    attributes: ['id', 'name']
+                    attributes: ['id', 'name', 'owner_id']
                 }
             ]
         });

@@ -1,5 +1,5 @@
 const { CacheService } = require('../config/redis.config');
-
+const projectCacheService = require('./cache.service');
 class ProjectCacheService {
     constructor() {
         this.ttl = parseInt(process.env.CACHE_TTL) || 300;

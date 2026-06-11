@@ -25,10 +25,11 @@ class BaseRepository {
     }
 
     // Update a record
-    async update(id, data) {
+     async update(id, data) {
         const record = await this.findById(id);
         if (!record) return null;
-        return await record.update(data);
+        await record.update(data);
+        return record;   
     }
 
     // Delete a record (hard delete)

@@ -41,5 +41,11 @@ module.exports = (sequelize) => {
         underscored: true
     });
 
+ Project.associate = (models) => {
+        Project.hasMany(models.Task, { as: 'tasks', foreignKey: 'project_id' });
+        Project.belongsTo(models.User, { as: 'owner', foreignKey: 'owner_id' });
+    };
+
+
     return Project;
 };

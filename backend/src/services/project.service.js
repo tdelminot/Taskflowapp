@@ -1,6 +1,6 @@
 const projectRepository = require('../repositories/project.repository');
 const { v4: uuidv4 } = require('uuid');
-
+const projectCacheService = require('./cache.service');
 class ProjectService {
     // Create a new project
     async createProject(ownerId, projectData) {

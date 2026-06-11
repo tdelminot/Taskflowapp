@@ -28,9 +28,14 @@ class TaskService {
     async getTaskById(taskId, userId) {
         const task = await taskRepository.findTaskWithComments(taskId);
         
-        // Check access through project
-        if (!task || task.project.owner_id !== userId) {
-            throw new Error('Task not found or access denied');
+        if (!task) {
+            throw new Error('Task not found');
+        }
+        
+        // Vérifier l'accès via le projet
+        const project = await projectRepository.findById(task.project_id);
+        if (!project || project.owner_id !== userId) {
+            throw new Error('Access denied');
         }
         
         return task;

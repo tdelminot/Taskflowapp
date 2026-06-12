@@ -3,7 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
-const { globalLimiter, authLimiter, apiLimiter } = require('./middlewares/rateLimit.middleware');
+const { /*globalLimiter, authLimiter,*/ apiLimiter } = require('./middlewares/rateLimit.middleware');
 const path = require('path');
 // Import routes
 const authRoutes = require('./routes/auth.routes');
@@ -28,12 +28,12 @@ app.use(cors({
 // Rate limiting - désactivé en test
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
-if (!isTestEnvironment) {
-    // Global rate limit on all API endpoints
-    app.use('/api/', globalLimiter.middleware());
-    // Stricter rate limit for auth endpoints
+ if (!isTestEnvironment) {
+    //  Global rate limit on all API endpoints
+   app.use('/api/', globalLimiter.middleware());
+  //Stricter rate limit for auth endpoints
     app.use('/api/auth/', authLimiter.middleware());
-}
+ }
 
 // Body parsing
 app.use(express.json());

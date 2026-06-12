@@ -113,18 +113,18 @@ class RateLimiter {
 
 // Pre-configured rate limiters
 const globalLimiter = new RateLimiter({
-    windowMs: 15 * 60 * 1000,
+     windowMs: 15 * 60 * 1000,
     max: 100,
     keyPrefix: 'rate-limit:global:'
 });
-
+ 
 const authLimiter = new RateLimiter({
     windowMs: 60 * 60 * 1000, // 1 hour
     max: 5, // 5 attempts per hour
     message: 'Too many authentication attempts, please try again after an hour.',
     keyPrefix: 'rate-limit:auth:'
 });
-
+ 
 const apiLimiter = new RateLimiter({
     windowMs: 1 * 60 * 1000, // 1 minute
     max: 60, // 60 requests per minute for authenticated users

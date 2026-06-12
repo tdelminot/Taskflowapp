@@ -6,12 +6,15 @@
   "scripts": {
     "start": "node backend/src/app.js",
     "dev": "nodemon src/app.js",
-     "test": "jest --runInBand --coverage --forceExit",
+    "test": "jest --runInBand --coverage --forceExit",
     "test:auth": "jest tests/integration/auth.test.js",
     "test:unit": "jest tests/auth.test.js tests/repositories/",
     "test:ci": "jest --coverage --maxWorkers=2",
+    "test:watch": "jest --watch",
     "lint": "eslint src/",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "docker-start": "npm run db:migrate && npm run start",
+    "db:migrate": "npx sequelize-cli db:migrate"
   },
   "keywords": [
     "api",
@@ -35,6 +38,7 @@
     "morgan": "^1.11.0",
     "multer": "^2.1.1",
     "mysql2": "^3.22.5",
+    "react-dropzone": "^15.0.0",
     "redis": "^6.0.0",
     "sequelize": "^6.37.8",
     "sharp": "^0.34.5",

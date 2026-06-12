@@ -9,3 +9,7 @@ logs/
 .DS_Store
 # Redis dump
 dump.rdb
+
+.env.docker
+.env.production
+*.secret
